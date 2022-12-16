@@ -1,0 +1,252 @@
+inputDat <- ZirFlu$donorInfo %>% full_join(ZirFlu$HAItiter) %>%
+  left_join(ZirFlu$donorSamples %>% filter(time == "T1")) %>%
+  left_join(ZirFlu$protein_dat %>% rownames_to_column("probenID"))
+
+## T1 protein plot -------------------
+a <- ZirFlu$protein_annot %>% filter(Assay %in% highlight_proteins$Assay)
+
+selectedPro <- "OID20722"
+abTiter <- "H1N1_abFC"
+
+plot_dat <- inputDat %>% filter(time == "T1") %>% 
+  select(patientID, condition, disease, category, {{abTiter}},
+         OID20481, OID20624, OID20765) # IL17D, TNFSF12, CCL22
+cowplot::plot_grid(
+  ggplot(plot_dat, aes(x = H1N1_abFC, y = OID20481)) +
+    geom_point(aes(color = category, shape = condition), 
+               size = 3, alpha = 0.8,
+               position = position_jitter(w = 0.08, h = 0.1)) +
+    geom_smooth(method = "lm", se = FALSE) + theme_bw(),
+  ggplot(plot_dat, aes(x = H1N1_abFC, y = OID20624)) +
+    geom_point(aes(color = category, shape = condition), 
+               size = 3, alpha = 0.8,
+               position = position_jitter(w = 0.08, h = 0.1)) +
+    geom_smooth(method = "lm", se = FALSE) + theme_bw(),
+  ggplot(plot_dat, aes(x = H1N1_abFC, y = OID20765)) +
+    geom_point(aes(color = category, shape = condition), 
+               size = 3, alpha = 0.8,
+               position = position_jitter(w = 0.08, h = 0.1)) +
+    geom_smooth(method = "lm", se = FALSE) + theme_bw(),
+  nrow = 3
+)
+
+plot_dat$category <- factor(plot_dat$category, levels = c("NR", "Other", "TR"))
+plot_dat$disease <- factor(plot_dat$disease, 
+                           levels = c("healthy", "cirrhosis"))
+plot_dat$condition <- factor(plot_dat$condition, 
+                             levels = c("healthy", "compensated cirrhosis", "decompensated cirrhosis"))
+cowplot::plot_grid(
+  ggboxplot(plot_dat, x = "category", y = "OID20481", palette = "jco", add = "jitter"),
+  ggboxplot(plot_dat, x = "disease", y = "OID20481", palette = "jco", add = "jitter"),
+  ggboxplot(plot_dat, x = "condition", y = "OID20481", palette = "jco", add = "jitter") + 
+    rotate_x_text(20),
+  ggboxplot(plot_dat, x = "category", y = "OID20624", palette = "jco", add = "jitter"),
+  ggboxplot(plot_dat, x = "disease", y = "OID20624", palette = "jco", add = "jitter"),
+  ggboxplot(plot_dat, x = "condition", y = "OID20624", palette = "jco", add = "jitter") + 
+    rotate_x_text(20),
+  ggboxplot(plot_dat, x = "category", y = "OID20765", palette = "jco", add = "jitter"),
+  ggboxplot(plot_dat, x = "disease", y = "OID20765", palette = "jco", add = "jitter"),
+  ggboxplot(plot_dat, x = "condition", y = "OID20765", palette = "jco", add = "jitter") + 
+    rotate_x_text(20),
+  nrow = 3, byrow = FALSE
+)
+
+library(tidyverse)
+
+# function ----------------------
+get.scatter_plot5 <- function(plotDat) {
+  plotDat %>% ggplot(aes(x = abFoldchange, y = expression)) +
+    geom_point(aes(color = category), size = 3, alpha = 0.8,
+               position = position_jitter(w = 0.08, h = 0.1)) +
+    geom_smooth(method = "lm", se = FALSE) + theme_bw()
+}
+
+get.scatter_plot6 <- function(plotDat) {
+  plotDat %>% ggplot(aes(x = abFoldchange, y = expression)) +
+    geom_point(aes(color = category), size = 3, alpha = 0.8,
+               position = position_jitter(w = 0.08, h = 0.1)) +
+    geom_smooth(method = "lm", se = FALSE) + theme_bw() +
+    facet_wrap(vars(disease))
+}
+
+check_protein <- get.proteinAnnot(ZirFlu$protein_annot, unlist(proSig))
+check_protein <- ZirFlu$protein_annot %>% 
+  filter(Assay %in% highlight_proteins$Assay)
+
+plotList_total <- list()
+plotList_total2 <- list()
+plotList_total3 <- list()
+plotList_total4 <- list()
+for (selectedVal in check_protein$OlinkID) {
+  plotList <- list()
+  plotList2 <- list()
+  plotList3 <- list()
+  plotList4 <- list()
+  for(abType in c("H1N1_abFC", "H3N2_abFC", "Bvictoria_abFC", "Byamagata_abFC")) {
+    plot_dat <- inputDat %>% filter(time == "T1") %>% 
+      select(patientID, condition, disease, category, time, 
+             all_of(c(abType, selectedVal))) %>%
+      rename("abFoldchange" = 6, "expression" = 7)
+    plotList[[abType]] <- cowplot::plot_grid(
+      get.scatter_plot5(plot_dat %>% filter(disease == "healthy")),
+      get.scatter_plot5(plot_dat %>% filter(disease == "cirrhosis")),
+      nrow = 2
+    )
+    plotList2[[abType]] <- get.scatter_plot6(plot_dat)
+    plotList2[[abType]] <- get.scatter_plot6(plot_dat)
+    plotList3[[abType]] <- plot_dat %>% 
+      ggscatter(x = "abFoldchange", y = "expression", 
+                color = "disease", add = "reg.line") +
+      stat_cor(aes(color = disease), method = "pearson")
+    plotList4[[abType]] <- plot_dat %>% 
+      ggscatter(x = "abFoldchange", y = "expression", add = "reg.line") +
+      stat_cor(method = "pearson")
+  }
+  plotList_total[[selectedVal]] <- plotList
+  plotList_total2[[selectedVal]] <- plotList2
+  plotList_total3[[selectedVal]] <- plotList3
+  plotList_total4[[selectedVal]] <- plotList4
+}
+
+protein <- "OID20462" # SIT1
+protein <- "OID20480" # TNFRSF13C
+protein <- "OID20490" # FGF5
+protein <- "OID20494" # JCHAIN
+protein <- "OID20504" # ITM2A
+protein <- "OID20533" # TRIM21
+protein <- "OID20547" # CLEC4C
+protein <- "OID20562" # IL15
+protein <- "OID20574" # OSM
+protein <- "OID20596" # KRT19
+protein <- "OID20611" # TNSFS10
+protein <- "OID20636" # CLEC7A
+protein <- "OID20641" # GMPR
+protein <- "OID20642" # TPSAB1
+protein <- "OID20650" # VEGFA
+protein <- "OID20655" # CCL13
+protein <- "OID20666" # IL12B
+#selectedVal <- "OID20666"
+protein <- "OID20672" # MMP1
+protein <- "OID20681" # DBNL
+protein <- "OID20687" # MMP10
+protein <- "OID20693" # CCL23
+protein <- "OID20709" # CCN2
+protein <- "OID20711" # MGLL
+protein <- "OID20714" # SHMT1
+protein <- "OID20722" # FIS1
+protein <- "OID20727" # GAL
+protein <- "OID20743" # EPCAM
+protein <- "OID20747" # CRHBP
+protein <- "OID20753" # MEPE
+cowplot::plot_grid(plotList_total3[[protein]]$H1N1_abFC, 
+                   plotList_total3[[protein]]$H3N2_abFC,
+                   plotList_total3[[protein]]$Bvictoria_abFC,
+                   plotList_total3[[protein]]$Byamagata_abFC,
+                   nrow = 2)
+cowplot::plot_grid(plotList_total4[[protein]]$H1N1_abFC, 
+                   plotList_total4[[protein]]$H3N2_abFC,
+                   plotList_total4[[protein]]$Bvictoria_abFC,
+                   plotList_total4[[protein]]$Byamagata_abFC,
+                   nrow = 2)
+cowplot::plot_grid(plotList_total[[protein]]$H1N1_abFC, 
+                   plotList_total[[protein]]$H3N2_abFC,
+                   plotList_total[[protein]]$Bvictoria_abFC,
+                   plotList_total[[protein]]$Byamagata_abFC,
+                   nrow = 1)
+cowplot::plot_grid(plotList_total2[[protein]]$H1N1_abFC, 
+                   plotList_total2[[protein]]$H3N2_abFC,
+                   plotList_total2[[protein]]$Bvictoria_abFC,
+                   plotList_total2[[protein]]$Byamagata_abFC,
+                   nrow = 4)
+
+# check if change to lm(abFC ~age + sex + proteinVal + disease) model 
+protein <-  "OID20481" # IL17D 
+protein <- "OID20575" # HSD11B1
+protein <- "OID20624" # TNFSF12
+cowplot::plot_grid(plotList_total3[[protein]]$H1N1_abFC, 
+                   plotList_total3[[protein]]$H3N2_abFC,
+                   plotList_total3[[protein]]$Bvictoria_abFC,
+                   plotList_total3[[protein]]$Byamagata_abFC,
+                   nrow = 2)
+cowplot::plot_grid(plotList_total4[[protein]]$H1N1_abFC, 
+                   plotList_total4[[protein]]$H3N2_abFC,
+                   plotList_total4[[protein]]$Bvictoria_abFC,
+                   plotList_total4[[protein]]$Byamagata_abFC,
+                   nrow = 2)
+
+# select consitent protein across season and strain
+protein <- "OID20722" # FIS1
+protein <- "OID20727" # GAL
+protein <- "OID20596" # KRT19
+protein <- "OID20669" # KYNU
+protein <- "OID20768" # LTBR
+protein <- "OID20480" # TNFRSF13C
+protein <- "OID20611" # TNSFS10
+protein <- "OID20533" # TRIM21
+cowplot::plot_grid(plotList_total3[[protein]]$H1N1_abFC, 
+                   plotList_total3[[protein]]$H3N2_abFC,
+                   plotList_total3[[protein]]$Bvictoria_abFC,
+                   plotList_total3[[protein]]$Byamagata_abFC,
+                   nrow = 2)
+cowplot::plot_grid(plotList_total4[[protein]]$H1N1_abFC, 
+                   plotList_total4[[protein]]$H3N2_abFC,
+                   plotList_total4[[protein]]$Bvictoria_abFC,
+                   plotList_total4[[protein]]$Byamagata_abFC,
+                   nrow = 2)
+
+# check with the iMED data
+load("/vol/projects/CIIM/Influenza/ZirrFlu/iMED_NhanNguyen/iMED.RData")
+
+iMED_protein <- iMED$donorInfo%>% full_join(iMED$donorSample) %>%
+  full_join(iMED$HAItiter)
+right_join(iMED$protein_dat %>% rownames_to_column("name")) %>% 
+  filter(time == "T1")
+  
+iMED_protein <- iMED$HAItiter %>% 
+  select(patientID, responder, matches("ab")) %>% get.log2() %>%
+  full_join(iMED$donorSample) %>%
+  right_join(iMED$protein_dat %>% rownames_to_column("name")) %>%
+  filter(time == "T1")
+
+iMED_plotList_total3 <- list()
+iMED_plotList_total4 <- list()
+for (selectedVal in check_protein$OlinkID) {
+  plotList3 <- list()
+  plotList4 <- list()
+  for(abType in c("ab_H1N1", "ab_H3N2", "ab_B")) {
+    plot_dat <- iMED_protein %>% 
+      select(patientID, responder, all_of(c(abType, selectedVal))) %>%
+      rename("abFoldchange" = 3, "expression" = 4) %>%
+      mutate(abFoldchange = ifelse(abFoldchange > 0, log2(abFoldchange), 0))
+
+    plotList3[[abType]] <- plot_dat %>% 
+      ggscatter(x = "abFoldchange", y = "expression", 
+                color = "responder", add = "reg.line") +
+      stat_cor(aes(color = responder), method = "pearson")
+    plotList4[[abType]] <- plot_dat %>% 
+      ggscatter(x = "abFoldchange", y = "expression", add = "reg.line") +
+      stat_cor(method = "pearson")
+  }
+  iMED_plotList_total3[[selectedVal]] <- plotList3
+  iMED_plotList_total4[[selectedVal]] <- plotList4
+}
+
+protein <- "OID20722" # FIS1
+protein <- "OID20727" # GAL
+protein <- "OID20596" # KRT19
+protein <- "OID20669" # KYNU
+protein <- "OID20768" # LTBR
+protein <- "OID20480" # TNFRSF13C
+protein <- "OID20611" # TNSFS10
+protein <- "OID20533" # TRIM21
+cowplot::plot_grid(
+  cowplot::plot_grid(iMED_plotList_total4[[protein]]$ab_H1N1, 
+                     iMED_plotList_total4[[protein]]$ab_H3N2,
+                     iMED_plotList_total4[[protein]]$ab_B, nrow = 1),
+  cowplot::plot_grid(iMED_plotList_total3[[protein]]$ab_H1N1, 
+                     iMED_plotList_total3[[protein]]$ab_H3N2,
+                     iMED_plotList_total3[[protein]]$ab_B, nrow = 1),
+  nrow = 2
+)
+
+

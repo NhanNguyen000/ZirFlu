@@ -1,0 +1,28 @@
+{
+    "id": "35C6B5F2",
+    "path": null,
+    "project_path": null,
+    "type": "object_explorer",
+    "hash": "0",
+    "contents": "",
+    "dirty": false,
+    "created": 1671009518061.0,
+    "source_on_save": false,
+    "relative_order": 13,
+    "properties": {
+        "id": "c95973f183374b62af93470b138af484",
+        "name": "input_protein",
+        "title": "input_protein",
+        "language": "R",
+        "source_window_id": "",
+        "Source": "Source"
+    },
+    "folds": "",
+    "lastKnownWriteTime": 1671008858,
+    "encoding": "",
+    "collab_server": "",
+    "source_window": "",
+    "last_content_update": 1671009518061,
+    "read_only": false,
+    "read_only_alternatives": []
+}

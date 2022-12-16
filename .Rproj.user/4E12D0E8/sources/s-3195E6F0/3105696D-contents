@@ -1,0 +1,35 @@
+library(tidyverse)
+
+ZirFlu <- list()
+
+ZirFlu$donorInfo <- rawDat$metadata %>% 
+  select(-c(probenID, Time)) %>% distinct() %>%
+  select(-matches("H1N1|H3N2|B_")) %>%
+  rename("patientID" = "Patient.ID")
+
+ZirFlu$donorSamples <- rawDat$metadata %>% 
+  select(Patient.ID, probenID, Time) %>% distinct() %>%
+  rename("patientID" = "Patient.ID", "time" = "Time")
+
+ZirFlu$HAItiter_2019_2020 <- rawDat$HAItiter_2019_2020 %>% 
+  mutate(condition = tolower(condition),
+         vaccine_response = tolower(vaccine_response),
+         category = ifelse(vaccine_response == "non", "NR",
+                           ifelse(vaccine_response %in% c("single", "double"), "Other", "TR"))) %>%
+  relocate(condition, .after = last_col()) %>%
+  mutate_at(c(2:17), as.numeric) %>% get.log2()
+
+ZirFlu$HAItiter_2020_2021 <- rawDat$HAItiter_2020_2021 %>%
+  mutate(condition = tolower(condition),
+         vaccine_response = tolower(vaccine_response),
+         category = ifelse(vaccine_response == "non", "NR",
+                           ifelse(vaccine_response %in% c("single", "double"), "Other", "TR"))) %>%
+  relocate(condition, .after = last_col()) %>%
+  mutate_at(c(2:17), as.numeric) %>% get.log2()
+
+ZirFlu$donorInfo2 <- ZirFlu$HAItiter_2019_2020 %>% 
+  select(patientID, condition) %>% mutate(season2019_2020 = TRUE) %>%
+  full_join(ZirFlu$HAItiter_2020_2021 %>% select(patientID, condition) %>% mutate(season2020_2021 = TRUE))
+
+setwd("/vol/projects/CIIM/Influenza/ZirrFlu/ZirFlu_NhanNguyen")
+save(ZirFlu, file = "ZirFlu.RData")

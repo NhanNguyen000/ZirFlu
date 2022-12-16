@@ -1,0 +1,27 @@
+{
+    "id": "56F2CCBE",
+    "path": "/vol/projects/BIIM/Influenza/ZirrFlu/ZirFlu_NhanNguyen/scripts/04_lmMixedModel_prePostVacc_2seasons_v1.R",
+    "project_path": null,
+    "type": "r_source",
+    "hash": "148399812",
+    "contents": "",
+    "dirty": false,
+    "created": 1670934202325.0,
+    "source_on_save": false,
+    "relative_order": 3,
+    "properties": {
+        "tempName": "Untitled1",
+        "source_window_id": "",
+        "Source": "Source",
+        "cursorPosition": "94,0",
+        "scrollLine": "68"
+    },
+    "folds": "",
+    "lastKnownWriteTime": 1671010190,
+    "encoding": "UTF-8",
+    "collab_server": "",
+    "source_window": "",
+    "last_content_update": 1671010190553,
+    "read_only": false,
+    "read_only_alternatives": []
+}

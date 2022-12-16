@@ -1,0 +1,41 @@
+library(ggpubr)
+inputDat_protein <- iMED$donorInfo%>% full_join(iMED$donorSample) %>%
+  right_join(iMED$protein_dat %>% rownames_to_column("name"))
+
+plotDat_protein <- inputDat_protein %>% filter(time == "T1")
+plotDat_protein$responder <- factor(plotDat_protein$responder, levels = c("NR", "Other", "TR"))
+
+ggboxplot(plotDat_protein, x = "responder", y = "OID20783", palette = "jco", add = "jitter")
+
+
+inputDat_metabolite <- iMED$donorInfo%>% full_join(iMED$donorSample) %>%
+  right_join(iMED$metabolite %>% rownames_to_column("name"))
+
+plotDat_metabolite <- inputDat_metabolite %>% filter(time == "T1")
+plotDat_metabolite$responder <- factor(plotDat_metabolite$responder, levels = c("NR", "Other", "TR"))
+ggboxplot(plotDat_metabolite, x = "responder", y = '1128', palette = "jco", add = "jitter")
+
+inputDat <- iMED$donorInfo%>% full_join(iMED$donorSample) %>%
+  right_join(iMED$protein_dat %>% rownames_to_column("name")) %>% 
+  right_join(iMED$metabolite %>% rownames_to_column("name"))
+
+plotDat <- inputDat %>% filter(time == "T1")
+cowplot::plot_grid(
+  ggboxplot(plotDat, x = "responder", y = "OID20783", palette = "jco", add = "jitter"),
+  ggboxplot(plotDat, x = "responder", y = "OID20713", palette = "jco", add = "jitter")
+)
+cowplot::plot_grid(
+  plotDat %>% 
+    ggplot(aes(x = plotDat$OID20783, y = plotDat$'1128')) + geom_point() +
+    geom_smooth(method = "lm", se = FALSE) + theme_bw(),
+  plotDat %>% 
+    ggplot(aes(x = plotDat$OID20783, y = plotDat$'1194')) + geom_point() +
+    geom_smooth(method = "lm", se = FALSE) + theme_bw(),
+  plotDat %>% 
+    ggplot(aes(x = plotDat$OID20713, y = plotDat$'1128')) + geom_point() +
+    geom_smooth(method = "lm", se = FALSE) + theme_bw(),
+  plotDat %>% 
+    ggplot(aes(x = plotDat$OID20713, y = plotDat$'1194')) + geom_point() +
+    geom_smooth(method = "lm", se = FALSE) + theme_bw()
+)
+

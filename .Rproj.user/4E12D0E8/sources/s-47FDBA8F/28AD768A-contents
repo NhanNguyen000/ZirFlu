@@ -1,0 +1,46 @@
+library(caret)
+library(tidyverse)
+
+metadata <- ZirFlu$donorSamples %>% full_join(ZirFlu$donorInfo) %>%
+  mutate(disease = ifelse(condition == "healthy", "healthy", "cirrhosis")) %>%
+  mutate(age_class = ifelse(age >60, ">60", "young"))
+
+# for protein -------------------------------------------
+protein_pca <- predict(preProcess(x=ZirFlu$protein_dat, method = "knnImpute"),
+                       ZirFlu$protein_dat) %>% prcomp()
+pca_dat <- protein_pca 
+
+# for metabolite ------------------------------------------
+metabolite_pca <- ZirFlu$metabolite_dat %>% prcomp()
+pca_dat <- metabolite_pca
+metadata_temp2 <- metadata_temp %>% filter(probenID %in% rownames(ZirFlu$metabolite_dat))
+
+
+# run PCA ------------------------------------------
+summary(pca_dat)$importance[1:3, 1:5]
+cowplot::plot_grid(
+  get.pca_plot(pca_dat, metadata, "condition"),
+  get.pca_plot(pca_dat, metadata, "disease"),
+  get.pca_plot(pca_dat, metadata, "category"),
+  get.pca_plot(pca_dat, metadata, "time"),
+  get.pca_plot(pca_dat, metadata, "sex"),
+  get.pca_plot(pca_dat, metadata, "age_class")
+)
+
+
+metadata_temp <- ZirFlu$metadata %>% 
+  mutate(condition = ifelse(condition == "healthy", "healthy", "cirrhosis"))
+get.pca_plot(protein_pca, metadata_temp, "condition")
+
+metabolite_pca <- ZirFlu$metabolite_dat %>% prcomp()
+metadata_temp2 <- metadata_temp %>% filter(probenID %in% rownames(ZirFlu$metabolite_dat))
+get.pca_plot(metabolite_pca, metadata_temp2, "condition")
+
+Fig1.C <- cowplot::plot_grid(
+  get.pca_plot(protein_pca, metadata_temp, "condition"),
+  get.pca_plot(metabolite_pca, metadata_temp2, "condition"),
+  nrow = 2, labels = c("protein", "metabolite"), 
+  label_fontface = "plain", label_x = 0.5
+)
+par(mar = c(3,3,1,1))
+plot(Fig1.C)

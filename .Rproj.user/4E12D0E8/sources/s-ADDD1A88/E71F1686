@@ -1,0 +1,27 @@
+{
+    "id": "E71F1686",
+    "path": "/vol/projects/BIIM/Influenza/ZirrFlu/ZirFlu_NhanNguyen/scripts/04_lmModelCorrection_2season_v2.R",
+    "project_path": null,
+    "type": "r_source",
+    "hash": "464590291",
+    "contents": "",
+    "dirty": false,
+    "created": 1670331413621.0,
+    "source_on_save": false,
+    "relative_order": 4,
+    "properties": {
+        "tempName": "Untitled1",
+        "source_window_id": "",
+        "Source": "Source",
+        "cursorPosition": "275,0",
+        "scrollLine": "239"
+    },
+    "folds": "",
+    "lastKnownWriteTime": 1670409810,
+    "encoding": "UTF-8",
+    "collab_server": "",
+    "source_window": "",
+    "last_content_update": 1670409747700,
+    "read_only": false,
+    "read_only_alternatives": []
+}

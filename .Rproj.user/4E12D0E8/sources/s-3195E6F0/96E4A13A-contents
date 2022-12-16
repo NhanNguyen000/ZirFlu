@@ -1,0 +1,30 @@
+library(tidyverse)
+library(rstatix)
+library(ggpubr)
+
+load("ZirFlu.RData")
+
+dat1 <- ZirFlu$HAItiter_2019_2020 %>% 
+  select(patientID, matches("ab")) %>%
+  pivot_longer(!patientID, names_to = "strains", values_to = "ab_value") %>%
+  mutate(season = "2019-2020")
+
+dat2 <- ZirFlu$HAItiter_2020_2021 %>% 
+  select(patientID, matches("ab")) %>%
+  pivot_longer(!patientID, names_to = "strains", values_to = "ab_value") %>%
+  mutate(season = "2020-2021")
+
+dat3 <- full_join(dat1, dat2) %>% as.data.frame() %>%
+  mutate(ab_value = as.numeric(ab_value)) %>%
+  mutate(strains = as.factor(strains), season = as.factor(season))
+
+dat4 <- dat3 %>% full_join(ZirFlu$donorInfo2)
+
+dat4 %>% 
+  ggsummarystats(x = "season", y = "ab_value", 
+                 ggfunc = ggboxplot, add = "jitter", position = position_dodge(),
+                 color = "condition", palette = "npg")
+dat4 %>%
+  ggboxplot(x = "season", y = "ab_value",
+          color = "condition", paletter = "npg", add = "jitter") +
+  stat_compare_means(method = "t.test")

@@ -1,0 +1,28 @@
+{
+    "id": "93EEDB5A",
+    "path": null,
+    "project_path": null,
+    "type": "object_explorer",
+    "hash": "0",
+    "contents": "",
+    "dirty": false,
+    "created": 1671112989048.0,
+    "source_on_save": false,
+    "relative_order": 6,
+    "properties": {
+        "id": "9aa570df5c494deb8948c0ca29780182",
+        "name": "resPrePost_protein",
+        "title": "resPrePost_protein",
+        "language": "R",
+        "source_window_id": "",
+        "Source": "Source"
+    },
+    "folds": "",
+    "lastKnownWriteTime": 1671010190,
+    "encoding": "",
+    "collab_server": "",
+    "source_window": "",
+    "last_content_update": 1671112989048,
+    "read_only": false,
+    "read_only_alternatives": []
+}

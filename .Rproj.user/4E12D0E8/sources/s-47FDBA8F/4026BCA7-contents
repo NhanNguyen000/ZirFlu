@@ -1,0 +1,108 @@
+try(dev.off())
+rm(list = ls())
+
+library(dplyr)
+library(openxlsx)
+library(magrittr)
+library(ggplot2)
+library(reshape2)
+library(ggsci)
+
+setwd('/vol/projects/CIIM/Influenza/ZirrFlu/metabolic')
+
+df <- read.xlsx(xlsxFile = 'raw_data/spreadsheets/DATA.xlsx',
+                sheet = 'ions') %>% 
+  tibble::column_to_rownames('ionIdx') %>% 
+  select(-all_of(c("ionMz", "ionAverageInt", "ionTopFormula", "ionTopIon", "ionTopName")))
+
+# Normalisation
+df <- log2(df)
+
+# Meta samples
+meta <- read.table('../metadata/zirrflu_meta.csv', sep = '\t', header=T)
+# Ditch the old Ab titers
+meta %<>% select(-c(H1N1_T1, H1N1_T2, H3N2_T1, H3N2_T2, B_victoria_T1, B_victoria_T2, B_yamagata_T1, B_yamagata_T2, FC_H1N1, FC_H3N2, FC_B_victoria, FC_B_yamagata))
+meta$probenID <- as.character(meta$probenID)
+
+# New ab titers
+abtiters <- read.xlsx('../metadata/zirrflu updated titers Janyn.xlsx', sheet = 'readR') %>% tibble::column_to_rownames('X1')
+meta <- merge(meta, abtiters, by.x = 'Patient.ID', by.y = 'row.names', sort=F, all.x=T, all.y=T)
+
+meta$FC_H1N1 <- log2(meta$H1N1_T4 / meta$H1N1_T1)
+meta$FC_H3N2 <- log2(meta$H3N2_T4 / meta$H3N2_T1)
+meta$FC_B1 <- log2(meta$B_Phuket_T4 / meta$B_Phuket_T1)
+meta$FC_B2 <- log2(meta$B_Maryland_T4 / meta$B_Maryland_T1)
+
+meta[which(meta$probenID == '339151988'), ]$probenID <- '339151941'
+meta[which(meta$probenID == '339156157'), ]$probenID <- '339156196'
+meta[which(meta$probenID == '339151947'), ]$probenID <- '339151948'
+meta[which(meta$probenID == '339156279'), ]$probenID <- '339156278'
+meta[which(meta$probenID == '339151924'), ]$probenID <- '339151926'
+meta[which(meta$probenID == '339152857'), ]$probenID <- '339152850'
+meta[which(meta$probenID == '339156180'), ]$probenID <- '339156227'
+meta[which(meta$probenID == '339156286'), ]$probenID <- '339156287'
+meta[which(meta$probenID == '339156199'), ]$probenID <- '339156214'
+meta[which(meta$probenID == '339156204'), ]$probenID <- '339156220'
+meta[which(meta$probenID == '339156219'), ]$probenID <- '339156213'
+meta[which(meta$probenID == '339156288'), ]$probenID <- '339156314'
+meta[which(meta$probenID == '339156321'), ]$probenID <- '339156322'
+meta[which(meta$probenID == '339152802'), ]$probenID <- '339152826'
+meta[which(meta$probenID == '339152806'), ]$probenID <- '339152815'
+meta[which(meta$probenID == '339152807'), ]$probenID <- '339152794'
+meta[which(meta$probenID == '339156181'), ]$probenID <- '339156212'
+meta[which(meta$probenID == '339152000'), ]$probenID <- '339151960'
+
+df <- df[, which(colnames(df) %in% meta$probenID)]
+meta %<>% arrange(match(probenID, colnames(df)))
+stopifnot(all(meta$probenID == colnames(df)))
+
+# Meta metabolites
+# df <- read.xlsx(xlsxFile = 'raw_data/spreadsheets/DATA.xlsx', sheet = 'ions')
+annotation_full <- read.xlsx(xlsxFile = 'raw_data/spreadsheets/DATA.xlsx', sheet = 'annotation', fillMergedCells = TRUE) 
+annotation <- annotation_full %>% filter(MzDelta < 0.001) %>% group_by(ionIdx) %>% summarise(annots = paste(CompoundID, collapse = ';')) 
+
+annotation_full %<>% group_by(ionIdx) %>% slice_head(n = 1) %>% select(-CompoundID)
+
+annotation <- merge(annotation, annotation_full, by = 'ionIdx', all.x=T, all.y=F, sort=F)
+
+# Split into three cols: KEGG (CXXXX), CHEBI IDs (CHEBI: XXXX) and HMDB: HMDBXXXXX.
+# Everything is separated by ; 
+spl <- strsplit(x = annotation$annots, split = ';')
+getID <- function(x, pattern) { ind <- grep(pattern = pattern, x = x)[1]; return(x[ind]) }
+
+# Chebi
+chebi <- lapply(spl, FUN = getID, pattern = 'CHEBI')
+chebi <- lapply(chebi, FUN = function(x) { strsplit(x = x, split = ':')[[1]][2] -> num; return(as.numeric(num))} )
+annotation$chebi <- unlist(chebi)
+
+# HMBD
+hmdb <- lapply(spl, FUN = getID, pattern = 'HMDB')
+hmdb <- gsub(pattern = ' ', replacement = '', x = hmdb)
+annotation$hmdb <- hmdb
+
+# KEGG
+kegg <- lapply(spl, FUN = getID, pattern = 'C')
+kegg <- lapply(kegg, FUN = function(x) {x <- ifelse(grepl(':', x), NA, x); return(x)} )
+annotation$kegg <- unlist(kegg)
+
+# Remove the ones that are not HMDB-annotated
+annotation %<>% filter(!is.na(hmdb))
+
+# Get the new HMDB names
+hmdbnames <- data.table::fread('/vol/projects/CIIM/Influenza/iMED/metabolic/db/hmdb/metabolite_HMDB_names_small.csv') %>% 
+  as.data.frame() %>% 
+  set_colnames(c('hmdb', 'hmdb_name'))
+
+old.idx <- annotation$ionIdx
+merge(annotation, hmdbnames, by = 'hmdb', sort=F, all.x=T, all.y=F) -> annotation
+
+annotation %<>% arrange(match(ionIdx, old.idx))
+annotation$finalname <- ifelse(is.na(annotation$hmdb_name), annotation$CompoundName, annotation$hmdb_name)
+
+# Right order
+df <- df[annotation$ionIdx, ]
+
+rm(chebi, kegg, hmdb, getID, spl, annotation_full)
+
+save.image('output/data.RData')
+
