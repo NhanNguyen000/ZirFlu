@@ -1,0 +1,5 @@
+p-value	q-value	pathway	source	external_id	members_input_overlap	members_input_overlap_geneids	size	effective_size
+1.15131138112e-05	0.0022680834208	Linoleic acid metabolism - Homo sapiens (human)	KEGG	path:hsa00591	C07338; C07354; C14832; C14831; C14827; C14836; C19937; C14834; C20186; C04717	k:C04717; k:C14836; k:C14834; k:C14832; k:C14831; k:C19937; k:C20186; k:C07338; k:C14827; k:C07354	28	19
+8.09001487081e-05	0.00796866464774	Pentose and glucuronate interconversions - Homo sapiens (human)	KEGG	path:hsa00040	C00514; C00476; C00508; C00259; C01508; C00817; C00312; C00310; C00309; C00800; C00216; C15930; C00181	k:C00508; k:C00514; k:C00817; k:C15930; k:C00181; k:C00312; k:C00310; k:C00216; k:C01508; k:C00259; k:C00476; k:C00800; k:C00309	58	36
+0.0057329047597	0.349115273557	Prostaglandin Synthesis and Regulation	Wikipathways	WP98	C04741; C04707; C00639	k:C04707; k:C04741; k:C00639	12	4
+0.00708863499607	0.349115273557	Steroid hormone biosynthesis - Homo sapiens (human)	KEGG	path:hsa00140	C05140; C05284; C05295; C04676; C05296; C05302; C05290	k:C05302; k:C05140; k:C04676; k:C05295; k:C05296; k:C05290; k:C05284	99	21
