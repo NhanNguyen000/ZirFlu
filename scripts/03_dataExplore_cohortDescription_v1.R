@@ -1,6 +1,6 @@
 ## age, sex, and disease conditions ----------------
 df <- ZirFlu$metadata %>% 
-  select(Patient.ID, sex, age, HEP_HLA_B27, medication, Disease, child_pugh_score, 
+  dplyr::select(Patient.ID, sex, age, HEP_HLA_B27, medication, Disease, child_pugh_score, 
          cirrhosis.ethiology, cirrhosis.therapy, condition) %>%
   remove_rownames() %>% distinct() %>%
   mutate_if(is.character, as.factor)

@@ -235,6 +235,26 @@ get.lmTest_correction <- function(variableList, abTiter, inputDat) {
   return(outcome)
 }
 
+get.lmTest_correction_v2 <- function(abFC, variableList, inputDat) {
+  outcome <- data.frame(targetVariable = character(), 
+                        independentVariable = character(),
+                        estimate = double(), std.error = double(),
+                        statistic = double(), p.value = double())
+  for (protein in variableList) {
+    dat_temp <- inputDat %>% 
+      select(all_of(abFC), sex, age, all_of(protein), disease) %>%
+      rename(abFC = {{abFC}}, proteinVal = {{protein}})
+    
+    lm_result <- tidy(lm(abFC ~ sex + age + proteinVal + disease, data = dat_temp)) %>%
+      select(term, estimate, std.error, statistic, p.value) %>%
+      as.data.frame()
+    
+    outcome[nrow(outcome) + 1, ] <- c(protein, lm_result[4, ])
+    outcome[nrow(outcome) + 1, ] <- c(protein, lm_result[5, ])
+  }
+  return(outcome)
+}
+
 get.var_onlyAbTiter <- function(var_associAbTiter, var_associDisease, abTiter) {
   vars <- setdiff(var_associAbTiter[[abTiter]]$targetVariable,
                       var_associDisease[[abTiter]]$targetVariable)

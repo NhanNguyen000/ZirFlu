@@ -39,7 +39,7 @@ TEST <- fgid %>% # 386, but I only have 337
              by = c("KEGG" = "cpdId")) %>% 
   select(pathway, Match) %>% group_by(pathway) %>%
   summarise(across(everything(), str_c, collapse = "; "))
-# note, both of his libetary are the same, just 1 library doble the name
+# note, both of his library are the same, just 1 library double the name
 
 # Jianbo code: 
 #BiocManager::install("KEGGREST",force = TRUE)
