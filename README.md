@@ -8,10 +8,7 @@ Publication DOI: To be added.
 - The **data** folder stores data information files (not public available, due to the protection of sensitive data and the large data files are not publishable in github)
 - The **scripts** is the R script to run the data analysis
 - The **reference** stores all the reference data that are used in the R scripts
-- The **output** folder store all the outcome of the data analysis, including
-    -- plots (.png and .svg formats) for main and supplement figures
-    -- "endogenous_metabolites.txt" table for the list of endogenous metabolites used in the metabolite analysis
-    -- all .txt files start with "meboDE" are the list of possible compound ID for statisitically significant metabolites in corresponding analysis. These compound ID lists are used to run the enrichment analysis in Metabo Analyst website (metaboanalyst.ca)
+- The **output** folder store all the outcome of the data analysis, including (1) plots (.png and .svg formats) for main and supplement figures; (2) "endogenous_metabolites.txt" table for the list of endogenous metabolites used in the metabolite analysis; (3) the excel files for the outcome of linear analyses between metaboliti concentrations and disease condition or HAI titers, (4) all .txt files start with "meboDE" are the list of possible compound ID for statisitically significant metabolites in corresponding analysis. These compound ID lists are used to run the enrichment analysis in Metabo Analyst website (metaboanalyst.ca)
 - The **dev** folder stores data, code, outcome at the development states (the try out phase before the definitive analysis)
 
 ## Contact:

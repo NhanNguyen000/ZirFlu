@@ -12,6 +12,17 @@ load("data/lmRes_meboAbVisit2.RData")
 # DE metabolites correlated with antibody titer visit2
 load("data/DEmebo_abVisit2.RData")
 
+## save as excel files --------------------------------------------------
+write.xlsx(list(H1N1_Visit2_2019 = lmRes$`2019_H1N1_Visit2`,
+                H3N2_Visit2_2019 = lmRes$`2019_H3N2_Visit2`,
+                Bvictoria_Visit2_2019 = lmRes$`2019_Bvictoria_Visit2`,
+                Byamagata_Visit2_2019 = lmRes$`2019_Byamagata_Visit2`,
+                H1N1_Visit2_2020 = lmRes$`2020_H1N1_Visit2`,
+                H3N2_Visit2_2020 = lmRes$`2020_H3N2_Visit2`,
+                Bvictoria_Visit2_2020 = lmRes$`2020_Bvictoria_Visit2`,
+                Byamagata_Visit2_2020 = lmRes$`2020_Byamagata_Visit2`), 
+           "output/suppTables_metabolite_associatedHAItiter_visit2.xlsx", rowNames = FALSE)
+
 # heatmap for all metabolites -----------------------------------------------
 lmStatistic <- lmRes %>% 
   lapply(function(x) x %>% select(targetVariable, statistic, Formula)) %>%

@@ -5,6 +5,7 @@ library(limma)
 library(gplots)
 library(ggvenn)
 library(ggVennDiagram)
+library(openxlsx)
 # functions used in the analysis -----------------------------------------------
 
 get.limmaRes <- function(metaDat, inputDat) {
@@ -82,6 +83,21 @@ resDE <- res_padj %>%
 
 resDE_padj <- res_padj %>%
   lapply(function(x) x %>% lapply(function(y) y %>% filter(p.adj < 0.05)))
+
+## save as excel files
+write.xlsx(list(Baseline_2019_compCirrhosis = res_padj$`2019_Baseline`$`conditionCompensated cirrhosis`,
+                Baseline_2019_decompCirrhosis = res_padj$`2019_Baseline`$`conditionDecompensated cirrhosis`,
+                Visit1_2019_compCirrhosis = res_padj$`2019_Visit1`$`conditionCompensated cirrhosis`,
+                Visit1_2019_decompCirrhosis = res_padj$`2019_Visit1`$`conditionDecompensated cirrhosis`,
+                Visit2_2019_compCirrhosis = res_padj$`2019_Visit2`$`conditionCompensated cirrhosis`,
+                Visit2_2019_decompCirrhosis = res_padj$`2019_Visit2`$`conditionDecompensated cirrhosis`,
+                Baseline_2020_compCirrhosis = res_padj$`2020_Baseline`$`conditionCompensated cirrhosis`,
+                Baseline_2020_decompCirrhosis = res_padj$`2020_Baseline`$`conditionDecompensated cirrhosis`,
+                Visit1_2020_compCirrhosis = res_padj$`2020_Visit1`$`conditionCompensated cirrhosis`,
+                Visit1_2020_decompCirrhosis = res_padj$`2020_Visit1`$`conditionDecompensated cirrhosis`,
+                Visit2_2020_compCirrhosis =  res_padj$`2020_Visit2`$`conditionCompensated cirrhosis`,
+                Visit2_2020_decompCirrhosis = res_padj$`2020_Visit2`$`conditionDecompensated cirrhosis`), 
+           "output/suppTables_metabolite_associatedDiseaseCondition.xlsx", rowNames = FALSE)
 
 # Venn diagram for overlapped metabolites --------------------------------------
 
