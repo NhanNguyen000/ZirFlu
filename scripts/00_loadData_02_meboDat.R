@@ -31,6 +31,9 @@ hmdb_endogenous <- read_csv("reference/20221011_HMDB_endogenousMetabolites")
 endoMebo_annot <- metabolite_annot %>% slice(which(Formula %in% hmdb_endogenous$CHEMICAL_FORMULA))
 #length(unique(endoMebo_annot$ionIdx)) # 786 metabolites
 
+write.table(endoMebo_annot, file = "output/endogenous_metabolites.txt", sep = "\t",
+            row.names = FALSE, quote = FALSE)
+
 ## check whether metabolites relate to drug--------------------------------------
 
 # ### get drugbank IDs from AnnotationHub

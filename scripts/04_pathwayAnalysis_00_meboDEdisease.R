@@ -26,7 +26,7 @@ meboDEdisease_annot <- ZirFlu$metabolite_annot %>%
 
 # make the metabolite/compound ID file
 write.table(meboDEdisease_annot$CompoundID, 
-            file = "data/meboDEdiseaseAnnot_season2019.txt", sep = "\t",
+            file = "output/meboDEdiseaseAnnot_season2019.txt", sep = "\t",
             row.names = FALSE, col.names = FALSE, quote = FALSE)
 
 # DE metabolte associated to ab titer -----------------------------------------------------------------
@@ -42,7 +42,7 @@ meboDEabTiter_annot <- ZirFlu$metabolite_annot %>%
 
 # make the metabolite/compound ID file
 write.table(meboDEabTiter_annot$CompoundID, 
-            file = "data/meboDEabTiterAnnot_season2019.txt", sep = "\t",
+            file = "output/meboDEabTiterAnnot_season2019.txt", sep = "\t",
             row.names = FALSE, col.names = FALSE, quote = FALSE)
 
 # DE metabolte associated to ab titer, consistent across strains and seasons -------------------------------------
@@ -53,5 +53,5 @@ meboDEabTiter_consistent <- ZirFlu$metabolite_annot %>%
 
 # make the metabolite/compound ID file
 write.table(meboDEabTiter_consistent$CompoundID, 
-            file = "data/meboDEabTiterAnnot_season2019_consistent.txt", sep = "\t",
+            file = "output/meboDEabTiterAnnot_season2019_consistent.txt", sep = "\t",
             row.names = FALSE, col.names = FALSE, quote = FALSE)
