@@ -5,7 +5,7 @@ This repository for analysing the omics data from ZirFLu, an influenza-vaccinate
 Publication DOI: To be added.
 
 ## Instructions
-- The **data** folder stores data information files (not public available)
+- The **data** folder stores data information files (not public available, due to the protection of sensitive data and the large data files are not publishable in github)
 - The **scripts** is the R script to run the data analysis
 - The **reference** stores all the reference data that are used in the R scripts
 - The **output** folder store all the outcome of the data analysis, including
