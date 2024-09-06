@@ -8,11 +8,11 @@ This repository for analysing the metabolomics data from ZirFlu (an influenza-va
 - The **scripts** is the R script to run the data analysis. The filenames of the script files contain sequence numbers that determine their excutive order.
 - The **reference** stores reference data that are used in the R scripts
 - The **output** folder store the outcome of the data analysis, including:
-   - (1) Plots for main and supplement figures (.png and .svg formats)
-   - (2) Table "endogenous_metabolites.txt" contains the list of endogenous metabolites used in the metabolite analysis
-   - (3) Excel files: the outcome of linear analyses between metabolite concentrations and disease condition or HAI titers 
-   - (4) .txt files: the list of possible compound ID for statisitically significant metabolites, i.e. "meboDE", in corresponding analysis. These compound ID lists are used to run the pathways analysis in Metabo Analyst website (metaboanalyst.ca)
-   - (5) the **pathwayAnalsyses_fromMetaboAnalyst** folder store the outcome of pathway analysis in Metabo Analyst website
+   - Plots for main and supplement figures (.png and .svg formats)
+   - Table "endogenous_metabolites.txt" contains the list of endogenous metabolites used in the metabolite analysis
+   - Excel files: the outcome of linear analyses between metabolite concentrations and disease condition or HAI titers 
+   - .txt files: the list of possible compound ID for statisitically significant metabolites, i.e. "meboDE", in corresponding analysis. These compound ID lists are used to run the pathways analysis in Metabo Analyst website ([metaboanalyst.ca](https://www.metaboanalyst.ca))
+   - The **pathwayAnalsyses_fromMetaboAnalyst** folder store the outcome of pathway analysis in Metabo Analyst website ([metaboanalyst.ca](https://www.metaboanalyst.ca))
 - The **dev** folder stores data, code, outcome at the development phase, which is a preliminary stage before the final analysis.
 
 ## Related publication
