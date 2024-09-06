@@ -17,6 +17,7 @@ This repository for analysing the metabolomics data from ZirFlu (an influenza-va
 
 ## Related publication
 TBC. Publication DOI: To be added.
+Link to our GitHub group repository: [CiiM-Bioinformatics-group/ZirFlu/](https://github.com/CiiM-Bioinformatics-group/ZirFlu/)
 
 ## Contact:
 LinkedIn:	[nhannguyen](https://www.linkedin.com/in/nhannguyen1412) | ORCID: [0000-0001-8720-1195](https://orcid.org/0000-0001-8720-1195)
