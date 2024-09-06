@@ -16,7 +16,7 @@ This repository for analysing the metabolomics data from ZirFlu (an influenza-va
 - The **dev** folder stores data, code, outcome at the development phase, which is a preliminary stage before the final analysis.
 
 ## Related publication
-TBC. Publication DOI: To be added.
+TBC. Publication DOI: To be added.\
 Link to our GitHub group repository: [CiiM-Bioinformatics-group/ZirFlu/](https://github.com/CiiM-Bioinformatics-group/ZirFlu/)
 
 ## Contact:
