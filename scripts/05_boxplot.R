@@ -6,7 +6,7 @@ library(ggpubr)
 # NOTE: The color code for each condition changed a bit, because other people saids the contrast is not clear in these specific plots 
 
 # load the data list object------------------------------------------------------
-load("data/ZirFlu.RData")
+load("processedData/ZirFlu.RData")
 
 metadata <- ZirFlu$donorSamples %>% 
   full_join(ZirFlu$donorInfo) %>%

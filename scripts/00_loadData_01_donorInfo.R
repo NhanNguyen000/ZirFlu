@@ -4,7 +4,7 @@ library(readxl)
 library(tidyverse)
 
 # load the data list object------------------------------------------------------
-load("data/ZirFlu.RData")
+load("processedData/ZirFlu.RData")
 
 # donor information (metadata) --------------------------------------------------
 
@@ -35,4 +35,4 @@ ZirFlu$donorSamples <- proteinSample %>%
                        ifelse(time == "T1", "Visit1", # Day 3-4 is Visit 1
                               ifelse(time == "T2", "Visit2", time)))) # day 21-28 is Visit 2
 
-save(ZirFlu, file = "data/ZirFlu.RData")
+save(ZirFlu, file = "processedData/ZirFlu.RData")

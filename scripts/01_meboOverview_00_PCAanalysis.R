@@ -28,7 +28,7 @@ get.pca_plot <- function(pca, metadat, groupType) {
 
 
 # load the data list object------------------------------------------------------
-load("data/ZirFlu.RData")
+load("processedData/ZirFlu.RData")
 
 # make PCA plot for each year
 year <- "2019" # or

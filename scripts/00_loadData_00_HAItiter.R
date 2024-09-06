@@ -107,5 +107,5 @@ ZirFlu$HAItiter <- HAItiter_2019 %>% mutate(season = "2019") %>%
                           levels = c("Cirrhosis", "Healthy")))
 
 
-save(ZirFlu, file = "data/ZirFlu.RData")
+save(ZirFlu, file = "processedData/ZirFlu.RData")
 

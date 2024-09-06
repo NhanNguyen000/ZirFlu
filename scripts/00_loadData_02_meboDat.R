@@ -13,7 +13,7 @@ get.log2 <- function(dat) {
 }
 
 # load the data list object ----------------------------------------------------
-load("data/ZirFlu.RData")
+load("processedData/ZirFlu.RData")
 
 # load metabolite data -------------------------------------------------------
 metabolite <- read_excel(
@@ -98,4 +98,4 @@ identical(unique(ZirFlu$metabolite_annot$ionIdx), as.numeric(colnames(ZirFlu$met
 rm(endoMebo_annot, dat_temp, old_probenID, correct_probenID, change_probenID, id)
 
 ## save data -------------------------------------------------------------------
-save(ZirFlu, file = "data/ZirFlu.RData")
+save(ZirFlu, file = "processedData/ZirFlu.RData")

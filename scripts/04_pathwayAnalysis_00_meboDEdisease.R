@@ -11,12 +11,12 @@ library(tidyverse)
 # however, we still use this website because so far it has the most comprehensive metabolite databases to do pathway analysis 
 
 # load the data------------------------------------------------------
-load("data/ZirFlu.RData")
+load("processedData/ZirFlu.RData")
 
 # DE metabolte associated to disease -----------------------------------------------------------------
 # outcome of the lm() model between metabolite and health conditions (cirrhosis vs. healthy), 
-load("data/lmRes_disease.RData")
-load("data/DEmebo_disease.RData")
+load("processedData/lmRes_disease.RData")
+load("processedData/DEmebo_disease.RData")
 
 meboDEdisease_2019 <- venn_disease_2019 %>% flatten() %>% unlist()
 length(unique(meboDEdisease_2019))
@@ -31,8 +31,8 @@ write.table(meboDEdisease_annot$CompoundID,
 
 # DE metabolte associated to ab titer -----------------------------------------------------------------
 # outcome of the lm() model between antibody titer visit2 and metabolites
-load("data/lmRes_meboAbVisit2.RData")
-load("data/DEmebo_abVisit2.RData")
+load("processedData/lmRes_meboAbVisit2.RData")
+load("processedData/DEmebo_abVisit2.RData")
 
 meboDEabTiter_2019 <- venn_meboAbVisit2_2019 %>% flatten() %>% unlist()
 length(unique(meboDEabTiter_2019))
@@ -46,7 +46,7 @@ write.table(meboDEabTiter_annot$CompoundID,
             row.names = FALSE, col.names = FALSE, quote = FALSE)
 
 # DE metabolte associated to ab titer, consistent across strains and seasons -------------------------------------
-load("data/DEmebo_abVisit2_consistAcrossStrainSeason.RData")
+load("processedData/DEmebo_abVisit2_consistAcrossStrainSeason.RData")
 
 meboDEabTiter_consistent <- ZirFlu$metabolite_annot %>% 
   filter(Formula %in% unique(selected_lmStatistic$Formula))

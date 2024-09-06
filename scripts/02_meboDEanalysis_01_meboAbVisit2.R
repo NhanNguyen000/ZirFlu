@@ -37,7 +37,7 @@ get.lmRes_padj <- function(res) {
 
 
 # load the data list object------------------------------------------------------
-load("data/ZirFlu.RData")
+load("processedData/ZirFlu.RData")
 
 # lm() model ------------------------------------------------------------------
 # Aim: calculate the association  between baseline metabolite to antibody titer at Visit 2, 
@@ -75,7 +75,7 @@ for (year in years) {
 }
 
 ## save lm() model outcome -------------------------------------------------------------------
-save(lmRes, file = "data/lmRes_meboAbVisit2.RData")
+save(lmRes, file = "processedData/lmRes_meboAbVisit2.RData")
 
 ## check sig. metabolites  -------------------------------------------------------------------
 DE_padj <- lmRes %>%
@@ -130,7 +130,7 @@ ggsave("output/vennPlot_meboAbVisit2_seasons2020.png",
        vennPlot_meboAbVisit2_2020, device = "png")
 ## save DE metabolites ----------------------------------------------------------
 save(venn_meboAbVisit2_2019, venn_meboAbVisit2_2020,
-     file = "data/DEmebo_abVisit2.RData")
+     file = "processedData/DEmebo_abVisit2.RData")
 
 # check metabolites -------------------------------------------------------------
 # option 1:

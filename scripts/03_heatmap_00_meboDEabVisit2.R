@@ -7,10 +7,10 @@ library(ComplexHeatmap)
 
 # load the lm() model outcome --------------------------------------------------
 # lm() model of antibody titer visit2 associated with metabolites
-load("data/lmRes_meboAbVisit2.RData")
+load("processedData/lmRes_meboAbVisit2.RData")
 
 # DE metabolites correlated with antibody titer visit2
-load("data/DEmebo_abVisit2.RData")
+load("processedData/DEmebo_abVisit2.RData")
 
 ## save as excel files --------------------------------------------------
 write.xlsx(list(H1N1_Visit2_2019 = lmRes$`2019_H1N1_Visit2`,
@@ -72,7 +72,7 @@ selected_lmStatistic <- lmStatistic %>%
   filter(Formula %in% consistented_metabolites$Formula) %>%
   filter(Formula %in% selected_DEmebo_2019)
 
-save(selected_lmStatistic, file = "data/DEmebo_abVisit2_consistAcrossStrainSeason.RData")
+save(selected_lmStatistic, file = "processedData/DEmebo_abVisit2_consistAcrossStrainSeason.RData")
 
 ## plot heatmap per each season -------------------------------------------------------------
 year <- "2019"

@@ -29,7 +29,7 @@ get.limmaRes <- function(metaDat, inputDat) {
 }
 
 # load the data list object------------------------------------------------------
-load("data/ZirFlu.RData")
+load("processedData/ZirFlu.RData")
 
 # lm() model ------------------------------------------------------------------
 # Aim: calculate the association between metabolite and health conditions (cirrhosis vs. healthy), 
@@ -60,7 +60,7 @@ for (year in years) {
 
 
 ## save lm() model outcome -------------------------------------------------------------------
-save(res, file = "data/lmRes_disease.RData")
+save(res, file = "processedData/lmRes_disease.RData")
 
 ## check sig. metabolites  -------------------------------------------------------------------
 comparedGroups <- c("conditionCompensated cirrhosis", "conditionDecompensated cirrhosis")
@@ -147,7 +147,7 @@ ggsave("output/vennPlot_disease_season2020.png",
 
 ## save DE metabolites ----------------------------------------------------------
 save(venn_disease_2019, venn_disease_2020,
-     file = "data/DEmebo_disease.RData")
+     file = "processedData/DEmebo_disease.RData")
 
 # check metabolites ---------------------------------------------------------------
 # option 1: 
